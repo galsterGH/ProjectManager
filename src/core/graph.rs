@@ -4,7 +4,32 @@
 // For now, it's just a placeholder
 
 use super::Node;
-use petgraph::Graph;
+use petgraph::{adj::NodeIndex, Graph};
 use uuid::Uuid;
+use std::collections::HashMap;
+use serde::{Serialize,Deserialize};
 
-// TODO: Implement ProjectGraph in Phase 3
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum DependencyType{
+    Blocks,
+    ResourcesRequiredFor,
+    Contains,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProjectGraph{
+    graph: Graph<Node,DependencyType>,
+    uid_to_index : HashMap<Uuid,NodeIndex>,
+}
+
+impl ProjectGraph{
+    
+    pub fn new() -> Self{
+        ProjectGraph{
+            graph: Graph::new(),
+            uid_to_index: HashMap::new()
+        }
+    }
+
+    
+}

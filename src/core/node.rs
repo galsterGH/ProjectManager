@@ -164,7 +164,7 @@ impl Node{
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize,Default)]
-struct NodeBuilder{
+pub struct NodeBuilder{
     id: Option<Uuid>,
     name: Option<String>,
     link: Option<String>,
@@ -214,8 +214,48 @@ impl NodeBuilder{
         self
     }
 
-    pub fn build_project(mut self)->Node {
-       
+    pub fn build_project(self)->Result<Node, &'static str> {
+        let id = self.id.ok_or("Failed to build project - missing project id")?;
+        let name = self.name.ok_or("Failed to build project - missing project name")?;
+        
+        Ok(Node::Project { 
+            id, 
+            name, 
+            link: self.link, 
+            timeline: self.timeline, 
+            owner: self.owner, 
+            participants: self.participants}) 
+    }
+
+    pub fn build_spec(self)->Result<Node, &'static str> {
+        let id = self.id.ok_or("Failed to build Spec - missing Spec id")?;
+        let name = self.name.ok_or("Failed to build Spec - missing Spec name")?;
+        
+        Ok(Node::Spec { id, name, link: self.link, owner: self.owner})
+    }
+
+    pub fn build_epic(self)->Result<Node, &'static str> {
+        let id =  self.id.ok_or("Failed to build Epic - missing Epic id")?;
+        let name =  self.name.ok_or("Failed to build Epic - missing Epic name")?;
+        let timeline =  self.timeline.ok_or("Failed to build Epic - missing Epic timeline")?;
+
+        Ok(Node::Epic { id, name, link: self.link, timeline, points: self.points, owner: self.owner, participants: self.participants })
+    }
+
+    pub fn build_userstory(self)->Result<Node, &'static str> {
+        let id =  self.id.ok_or("Failed to build Userstory - missing Userstory id")?;
+        let name =  self.name.ok_or("Failed to build Userstory - missing Userstory name")?;
+        let timeline =  self.timeline.ok_or("Failed to build Userstory - missing Userstory timeline")?;
+
+        Ok(Node::UserStory { id, name, link:self.link, timeline: timeline, points: self.points, owner: self.owner })
+    }
+
+    pub fn build_tasks(self)->Result<Node, &'static str> {
+        let id =  self.id.ok_or("Failed to build Tasks - missing Tasks id")?;
+        let name =  self.name.ok_or("Failed to build Tasks - missing Tasks name")?;
+        let timeline =  self.timeline.ok_or("Failed to build Tasks - missing Tasks timeline")?;
+
+        Ok(Node::Tasks { id, name, link:self.link, timeline: timeline, points: self.points, owner: self.owner })
     }
 
 }
