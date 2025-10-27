@@ -49,7 +49,31 @@ pub enum Node {
 }
 
 impl Node{
-   pub fn set_id(&mut self, uid: Uuid){
+    pub fn get_id(&self) -> Uuid{
+        match self{
+            Node::Project { id,..}|
+            Node::Spec{id,..}|
+            Node::Epic{id,..} |
+            Node::UserStory { id, ..}|
+            Node::Tasks { id,..} => {
+                *id
+            }
+        }
+    }
+
+    pub fn get_name(&self) -> &str{
+        match self{
+            Node::Project {name,..}|
+            Node::Spec{name,..}|
+            Node::Epic{name,..} |
+            Node::UserStory {name, ..}|
+            Node::Tasks {name,..} => {
+                name
+            }
+        }
+    }
+
+    pub fn set_id(&mut self, uid: Uuid){
         match self{
                 Node::Project{id,..} |
                 Node::Spec{id,..}|
@@ -59,9 +83,9 @@ impl Node{
                     *id = uid;
                 }
         }
-   }
+    }
 
-   pub fn set_name(&mut self, new_name: String){
+    pub fn set_name(&mut self, new_name: String){
         match self{
                 Node::Project{name,..}|
                 Node::Spec{name,..}|
@@ -71,9 +95,9 @@ impl Node{
                     *name = new_name;
                 }
         }
-   }
+    }
 
-   pub fn set_link(&mut self, new_link: String){
+    pub fn set_link(&mut self, new_link: String){
         match self{
                 Node::Project{link,..} |
                 Node::Spec{link,..}|
@@ -83,9 +107,9 @@ impl Node{
                     *link = Some(new_link);
                 }
         }
-   }
+    }
 
-   pub fn set_timeline(&mut self, new_timeline: Timeline){
+    pub fn set_timeline(&mut self, new_timeline: Timeline){
         match self{
                 Node::Project{timeline,..} =>{
                     *timeline = Some(new_timeline)
@@ -97,9 +121,9 @@ impl Node{
                     *timeline = new_timeline
                 }
         }
-   }
+    }
 
-   pub fn set_owner(&mut self, new_owner: String){
+    pub fn set_owner(&mut self, new_owner: String){
         match self{
                 Node::Project{owner,..} |
                 Node::Spec{owner,..}|
@@ -109,9 +133,9 @@ impl Node{
                     *owner = Some(new_owner);
                 }
         }
-   }
+    }
 
-   pub fn add_participant(&mut self, participant: String)->Result<(),&'static str>{
+    pub fn add_participant(&mut self, participant: String)->Result<(),&'static str>{
         match self{
                 Node::Project{participants,..} |
                 Node::Epic{participants,..} => {
@@ -122,9 +146,9 @@ impl Node{
                     Err("This node type does not support participants")
                 }
         }
-   }
+    }
 
-   pub fn remove_participant(&mut self, participant: &str)->Result<(), &'static str>{
+    pub fn remove_participant(&mut self, participant: &str)->Result<(), &'static str>{
         match self{
             Node::Project{participants,..} |
             Node::Epic{participants,..} => {
@@ -145,9 +169,9 @@ impl Node{
                 Err("This node type does not support participants")
             }
         }
-   }
+    }
 
-   pub fn set_points(&mut self, new_points : u32)-> Result<(),&'static str>{
+    pub fn set_points(&mut self, new_points : u32)-> Result<(),&'static str>{
         match self{
             Node::Epic{points,..}|
             Node::UserStory{points,..}|
@@ -159,8 +183,7 @@ impl Node{
                 Err("This node type does not contain points")
             }
         }
-   }
-
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize,Default)]
